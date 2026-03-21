@@ -1,28 +1,41 @@
 # -*- mode: python ; coding: utf-8 -*-
-# PyInstaller spec file for pypdf-combiner
+# PyInstaller spec for pypdf-combiner
+# Build:  pyinstaller build/pypdf_combiner.spec --distpath dist --workpath build/_work
 
-import os
+import sys
+from pathlib import Path
+
+ROOT = Path(SPECPATH).parent   # repo root
 
 block_cipher = None
 
 a = Analysis(
-    ['../src/combiner/main.py'],
-    pathex=['..'],
+    [str(ROOT / "src" / "combiner" / "main.py")],
+    pathex=[str(ROOT)],
     binaries=[],
     datas=[
-        ('../assets/icon.ico', '.'),
+        (str(ROOT / "assets" / "icon.ico"), "."),
     ],
     hiddenimports=[
-        'pypdf',
-        'pypdf._crypt_providers',
-        'customtkinter',
-        'winotify',
-        'psutil',
+        # pypdf lazy-imports its crypto providers
+        "pypdf",
+        "pypdf._crypt_providers",
+        "pypdf._crypt_providers._fallback",
+        "pypdf._crypt_providers._cryptography",
+        # customtkinter loads themes at runtime
+        "customtkinter",
+        "customtkinter.windows",
+        "customtkinter.windows.widgets",
+        "customtkinter.windows.widgets.theme",
+        # winotify and runtime deps
+        "winotify",
+        "psutil",
+        "psutil._pswindows",
     ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    excludes=["tkinter.test", "unittest", "pydoc", "doctest"],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -36,18 +49,21 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='pypdf_combiner',
+    name="pypdf_combiner",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=False,       # No console window (runs silently from Explorer)
+    console=False,              # Silent — no console window from Explorer
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='../assets/icon.ico',
+    icon=str(ROOT / "assets" / "icon.ico"),
+    version=str(ROOT / "build" / "version_info.py"),
+    uac_admin=False,            # Explicitly no UAC elevation
+    uac_uiaccess=False,
 )
 
 coll = COLLECT(
@@ -57,6 +73,6 @@ coll = COLLECT(
     a.datas,
     strip=False,
     upx=True,
-    upx_exclude=[],
-    name='pypdf_combiner',
+    upx_exclude=["vcruntime*.dll", "msvcp*.dll"],
+    name="pypdf_combiner",
 )
