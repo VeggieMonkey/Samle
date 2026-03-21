@@ -205,43 +205,18 @@ def build_installer_side():
     print(f"OK installer_side.bmp  ({W}x{H})")
 
 
-# ── Installer header banner (497 × 55, 24-bit BMP) ────────────────────────
+# ── Installer small image (55 × 55, 24-bit BMP) ───────────────────────────
+# WizardSmallImageFile in Inno Setup modern style must be 55x55
 
 def build_installer_header():
-    W, H = 497, 55
-    img = Image.new("RGB", (W, H), WHITE)
-    draw = ImageDraw.Draw(img)
-
-    # Right-side blue accent block
-    accent_w = 160
-    for x in range(W - accent_w, W):
-        t = (x - (W - accent_w)) / accent_w
-        r = int(BLUE_LIGHT[0] + (BLUE_MID[0] - BLUE_LIGHT[0]) * t)
-        g = int(BLUE_LIGHT[1] + (BLUE_MID[1] - BLUE_LIGHT[1]) * t)
-        b = int(BLUE_LIGHT[2] + (BLUE_MID[2] - BLUE_LIGHT[2]) * t)
-        draw.line([(x, 0), (x, H)], fill=(r, g, b))
-
-    # Thin blue bottom border
-    draw.rectangle([0, H - 2, W, H], fill=BLUE_MID)
-
-    # Mini icon on the right
-    icon = make_icon_image(40).convert("RGBA")
-    ix = W - 50
-    iy = (H - 40) // 2
-    img.paste(icon, (ix, iy), icon)
-
-    try:
-        font_title = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 15)
-        font_sub   = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 11)
-    except Exception:
-        font_title = font_sub = ImageFont.load_default()
-
-    draw.text((14, 10), "pypdf-combiner", fill=BLUE_DARK, font=font_title)
-    draw.text((14, 30), "PDF merging for Windows Explorer", fill=GRAY_TEXT, font=font_sub)
+    S = 55
+    img = Image.new("RGB", (S, S), BLUE_DARK)
+    icon = make_icon_image(S).convert("RGBA")
+    img.paste(icon, (0, 0), icon)
 
     out = ASSETS / "installer_header.bmp"
     img.save(out, format="BMP")
-    print(f"OK installer_header.bmp  ({W}x{H})")
+    print(f"OK installer_header.bmp  ({S}x{S})")
 
 
 if __name__ == "__main__":
