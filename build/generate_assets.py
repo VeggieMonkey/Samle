@@ -6,9 +6,12 @@ Produces:
   assets/installer_header.bmp – Inno Setup header banner (497×55)
 """
 
+import os
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 import math
+
+VERSION = os.environ.get("APP_VERSION", "dev")
 
 ROOT = Path(__file__).parent.parent
 ASSETS = ROOT / "assets"
@@ -192,7 +195,7 @@ def build_installer_side():
     draw.text(((W - tw2) // 2, H // 3 + 64), tagline, fill=GRAY_LIGHT, font=font_small)
 
     # Bottom version
-    ver = "v1.0.0"
+    ver = VERSION
     bb3 = draw.textbbox((0, 0), ver, font=font_small)
     tw3 = bb3[2] - bb3[0]
     draw.text(((W - tw3) // 2, H - 20), ver, fill=GRAY_LIGHT, font=font_small)

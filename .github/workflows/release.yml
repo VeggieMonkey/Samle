@@ -16,6 +16,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "version=dev-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -28,6 +38,8 @@ jobs:
 
       - name: Generate assets
         run: python build/generate_assets.py
+        env:
+          APP_VERSION: ${{ steps.version.outputs.version }}
 
       - name: Build with PyInstaller
         run: |
@@ -39,17 +51,7 @@ jobs:
 
       - name: Build installer
         run: |
-          iscc installer/pypdf_combiner.iss
-
-      - name: Get version
-        id: version
-        shell: bash
-        run: |
-          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-          else
-            echo "version=dev-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          fi
+          iscc installer/pypdf_combiner.iss /DAppVersion=${{ steps.version.outputs.version }}
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
@@ -69,6 +71,13 @@ jobs:
             1. Download `pypdf-combiner-*-setup.exe` below
             2. Run the installer (no admin rights required)
             3. Right-click any PDF files in Explorer and select **Combine PDFs**
+
+            ## Windows SmartScreen warning
+
+            Windows may show a "Windows protected your PC" warning because the installer
+            is not yet code-signed. This is normal for new, self-distributed software.
+
+            To proceed: click **More info** → **Run anyway**
           files: dist/installer/*.exe
           draft: false
           prerelease: false
