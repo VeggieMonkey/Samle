@@ -1,8 +1,6 @@
-"""Windows VERSIONINFO resource for the pypdf_combiner EXE.
-
-PyInstaller reads this file via the `version` argument in the .spec file.
-Generated format: https://pyinstaller.org/en/stable/usage.html#capturing-windows-version-data
-"""
+# Windows VERSIONINFO resource for the pypdf_combiner EXE.
+# PyInstaller reads this file via the `version` argument in the .spec file.
+# Format: https://pyinstaller.org/en/stable/usage.html#capturing-windows-version-data
 
 # fmt: off
 VSVersionInfo(
