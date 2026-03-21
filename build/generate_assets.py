@@ -138,7 +138,7 @@ def build_icon():
         sizes=[(s, s) for s in sizes],
         append_images=frames[1:],
     )
-    print(f"✓ icon.ico  ({', '.join(str(s) for s in sizes)} px)")
+    print(f"OK icon.ico  ({', '.join(str(s) for s in sizes)} px)")
 
 
 # ── Installer side image (164 × 314, 24-bit BMP) ──────────────────────────
@@ -199,7 +199,7 @@ def build_installer_side():
 
     out = ASSETS / "installer_side.bmp"
     img.save(out, format="BMP")
-    print(f"✓ installer_side.bmp  ({W}×{H})")
+    print(f"OK installer_side.bmp  ({W}x{H})")
 
 
 # ── Installer header banner (497 × 55, 24-bit BMP) ────────────────────────
@@ -238,7 +238,7 @@ def build_installer_header():
 
     out = ASSETS / "installer_header.bmp"
     img.save(out, format="BMP")
-    print(f"✓ installer_header.bmp  ({W}×{H})")
+    print(f"OK installer_header.bmp  ({W}x{H})")
 
 
 if __name__ == "__main__":
