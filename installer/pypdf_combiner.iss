@@ -8,7 +8,7 @@
   #define AppVersion   "1.0.5"
 #endif
 #define AppPublisher   "pypdf-combiner"
-#define AppURL         "https://github.com/VeggieMonkey/Pypdf-combiner"
+#define AppURL         "https://github.com/VeggieMonkey/Samle"
 #define AppExeName     "pypdf_combiner.exe"
 #define AppDescription "PDF merging for Windows Explorer"
 
