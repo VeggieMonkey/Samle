@@ -1,4 +1,4 @@
-"""Simple dict-based internationalization for pypdf-combiner."""
+"""Simple dict-based internationalization for Samle."""
 
 STRINGS = {
     "no": {

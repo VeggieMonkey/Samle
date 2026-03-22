@@ -3,11 +3,11 @@
 ;  Per-user install: no administrator rights required.
 ; ============================================================================
 
-#define AppName        "pypdf-combiner"
+#define AppName        "Samle"
 #ifndef AppVersion
   #define AppVersion   "1.0.5"
 #endif
-#define AppPublisher   "pypdf-combiner"
+#define AppPublisher   "VeggieMonkey"
 #define AppURL         "https://github.com/VeggieMonkey/Samle"
 #define AppExeName     "pypdf_combiner.exe"
 #define AppDescription "PDF merging for Windows Explorer"

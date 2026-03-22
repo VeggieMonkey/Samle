@@ -1,4 +1,4 @@
-"""Generate all graphical assets for pypdf-combiner.
+"""Generate all graphical assets for Samle.
 
 Produces:
   assets/icon.ico         – app icon (16/32/48/64/128/256 px)
@@ -15,10 +15,10 @@ ROOT = Path(__file__).parent.parent
 ASSETS = ROOT / "assets"
 ASSETS.mkdir(exist_ok=True)
 
-# Version is injected by build.py via the PYPDF_COMBINER_VERSION env var.
+# Version is injected by build.py via the SAMLE_VERSION env var.
 # When running generate_assets.py directly, falls back to pyproject.toml.
 def _get_version() -> str:
-    v = os.environ.get("PYPDF_COMBINER_VERSION", "")
+    v = os.environ.get("SAMLE_VERSION", "")
     if v:
         return v
     try:

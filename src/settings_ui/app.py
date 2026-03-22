@@ -1,4 +1,4 @@
-"""Settings window for pypdf-combiner.
+"""Settings window for Samle.
 
 Built with customtkinter — follows the Windows 11 system light/dark theme
 automatically and uses Fluent-style rounded controls.

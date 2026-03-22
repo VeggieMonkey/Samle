@@ -1,6 +1,6 @@
-"""Configuration management for pypdf-combiner.
+"""Configuration management for Samle.
 
-Config is stored as JSON in %APPDATA%\\pypdf-combiner\\config.json on Windows.
+Config is stored as JSON in %APPDATA%\\samle-pdf\\config.json on Windows.
 Falls back to the user home directory on other platforms (for development).
 """
 
