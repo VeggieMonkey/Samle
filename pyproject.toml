@@ -3,8 +3,8 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.backends.legacy:build"
 
 [project]
-name = "pypdf-combiner"
-version = "1.0.0"
+name = "samle-pdf"
+version = "1.0.5"
 description = "Right-click Windows context menu tool for merging PDFs with vedlegg ordering"
 requires-python = ">=3.11"
 dependencies = [
@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-pypdf-combiner = "src.combiner.main:main"
+samle-pdf = "src.combiner.main:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

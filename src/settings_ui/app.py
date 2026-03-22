@@ -23,8 +23,7 @@ if __name__ == "__main__":
 from src.combiner.config import load_config, save_config
 from src.combiner.i18n import LANGUAGE_LABELS, get
 from src.combiner.namer import preview_output_name
-
-APP_VERSION = "1.0.0"
+from src.combiner._version import __version__ as APP_VERSION
 WINDOW_W    = 540
 WINDOW_H    = 480
 
@@ -32,6 +31,19 @@ WINDOW_H    = 480
 _BLUE       = "#2D6EDC"
 _BLUE_HOVER = "#1E50A2"
 _BLUE_DARK  = "#1E50A2"
+
+
+_RELEASES_URL = "https://github.com/VeggieMonkey/Pypdf-combiner/releases/latest"
+_RELEASES_API = "https://api.github.com/repos/VeggieMonkey/Pypdf-combiner/releases/latest"
+
+
+def _is_newer(latest: str, current: str) -> bool:
+    def parts(v: str) -> tuple[int, ...]:
+        try:
+            return tuple(int(x) for x in v.split("."))
+        except ValueError:
+            return (0,)
+    return parts(latest) > parts(current)
 
 
 def _icon_path() -> str | None:
@@ -71,6 +83,7 @@ class SettingsApp(ctk.CTk):
         self._build_ui()
         self._refresh_labels()
         self._update_preview()
+        self._check_for_updates()
 
     # ── UI construction ────────────────────────────────────────────────────
 
@@ -119,7 +132,7 @@ class SettingsApp(ctk.CTk):
 
         self._header_title = ctk.CTkLabel(
             title_frame,
-            text="pypdf-combiner",
+            text="Samle",
             font=ctk.CTkFont(size=20, weight="bold"),
             text_color="white",
             fg_color="transparent",
@@ -290,7 +303,7 @@ class SettingsApp(ctk.CTk):
 
         self._version_label = ctk.CTkLabel(
             footer,
-            text=f"pypdf-combiner  v{APP_VERSION}",
+            text=f"Samle  v{APP_VERSION}",
             font=ctk.CTkFont(size=11),
             text_color=("gray55", "gray55"),
             anchor="w",
@@ -380,6 +393,33 @@ class SettingsApp(ctk.CTk):
                 self._lang = code
                 break
         self._refresh_labels()
+
+    def _check_for_updates(self) -> None:
+        import threading
+        threading.Thread(target=self._fetch_latest_version, daemon=True).start()
+
+    def _fetch_latest_version(self) -> None:
+        try:
+            import json
+            import urllib.request
+            req = urllib.request.Request(
+                _RELEASES_API, headers={"User-Agent": "samle-pdf"}
+            )
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                data = json.loads(resp.read())
+            latest = data.get("tag_name", "").lstrip("v")
+            if latest and _is_newer(latest, APP_VERSION):
+                self.after(0, lambda: self._show_update_banner(latest))
+        except Exception:
+            pass
+
+    def _show_update_banner(self, version: str) -> None:
+        text = get("update_available", self._lang, version=version)
+        self._version_label.configure(text=text, text_color=_BLUE, cursor="hand2")
+        self._version_label.bind(
+            "<Button-1>",
+            lambda _: __import__("webbrowser").open(_RELEASES_URL),
+        )
 
     def _on_save(self) -> None:
         old_lang = self._config.get("language", "no")

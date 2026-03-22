@@ -2,10 +2,11 @@
 
 Produces:
   assets/icon.ico         – app icon (16/32/48/64/128/256 px)
-  assets/installer_side.bmp   – Inno Setup wizard side image (164×314)
-  assets/installer_header.bmp – Inno Setup header banner (497×55)
+  assets/installer_side.bmp   – Inno Setup wizard side image (164x314)
+  assets/installer_header.bmp – Inno Setup header banner (497x55)
 """
 
+import os
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 import math
@@ -13,6 +14,42 @@ import math
 ROOT = Path(__file__).parent.parent
 ASSETS = ROOT / "assets"
 ASSETS.mkdir(exist_ok=True)
+
+# Version is injected by build.py via the PYPDF_COMBINER_VERSION env var.
+# When running generate_assets.py directly, falls back to pyproject.toml.
+def _get_version() -> str:
+    v = os.environ.get("PYPDF_COMBINER_VERSION", "")
+    if v:
+        return v
+    try:
+        import tomllib
+        with open(ROOT / "pyproject.toml", "rb") as f:
+            return tomllib.load(f)["project"]["version"]
+    except Exception:
+        return "0.0.0"
+
+
+def _load_fonts(big_size: int, small_size: int):
+    """Load fonts cross-platform; falls back to PIL default."""
+    candidates_bold = [
+        "C:/Windows/Fonts/arialbd.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    ]
+    candidates_reg = [
+        "C:/Windows/Fonts/arial.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    ]
+    try:
+        font_big = next(
+            ImageFont.truetype(p, big_size) for p in candidates_bold if Path(p).exists()
+        )
+        font_small = next(
+            ImageFont.truetype(p, small_size) for p in candidates_reg if Path(p).exists()
+        )
+        return font_big, font_small
+    except StopIteration:
+        default = ImageFont.load_default()
+        return default, default
 
 
 # ── Colour palette (Norwegian blue + modern accent) ────────────────────────
@@ -68,7 +105,7 @@ def _draw_lines(draw: ImageDraw.ImageDraw, x, y, w, line_color, count=3, gap=Non
 
 
 def make_icon_image(size: int) -> Image.Image:
-    """Render the icon at *size*×*size* with RGBA."""
+    """Render the icon at *size*x*size* with RGBA."""
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
 
@@ -98,7 +135,7 @@ def make_icon_image(size: int) -> Image.Image:
     _draw_lines(draw, rx + max(1, pw // 8), ry + int(ph * 0.45),
                 int(pw * 0.65), (160, 185, 230), count=3, gap=max(2, size // 14))
 
-    # Arrow pointing right → merging
+    # Arrow pointing right -> merging
     ax = int(size * 0.62)
     ay = int(size * 0.42)
     aw = int(size * 0.10)
@@ -129,19 +166,26 @@ def make_icon_image(size: int) -> Image.Image:
 
 def build_icon():
     sizes = [16, 24, 32, 48, 64, 128, 256]
-    frames = [make_icon_image(s) for s in sizes]
-    # Save as ICO (Windows icon with multiple sizes)
+    logo = ASSETS / "logo.png"
     out = ASSETS / "icon.ico"
+
+    if logo.exists():
+        src = Image.open(logo).convert("RGBA")
+        frames = [src.resize((s, s), Image.LANCZOS) for s in sizes]
+        print(f"ok icon.ico  (from logo.png -> {', '.join(str(s) for s in sizes)} px)")
+    else:
+        frames = [make_icon_image(s) for s in sizes]
+        print(f"ok icon.ico  (generated -> {', '.join(str(s) for s in sizes)} px)")
+
     frames[0].save(
         out,
         format="ICO",
         sizes=[(s, s) for s in sizes],
         append_images=frames[1:],
     )
-    print(f"✓ icon.ico  ({', '.join(str(s) for s in sizes)} px)")
 
 
-# ── Installer side image (164 × 314, 24-bit BMP) ──────────────────────────
+# ── Installer side image (164 x 314, 24-bit BMP) ──────────────────────────
 
 def build_installer_side():
     W, H = 164, 314
@@ -167,21 +211,20 @@ def build_installer_side():
         draw = ImageDraw.Draw(img)
 
     # Draw a mini icon in the centre of the circle
-    icon = make_icon_image(72).convert("RGBA")
-    # Paste with mask
+    logo = ASSETS / "logo.png"
+    if logo.exists():
+        icon = Image.open(logo).convert("RGBA").resize((72, 72), Image.LANCZOS)
+    else:
+        icon = make_icon_image(72).convert("RGBA")
     ix = (W - 72) // 2
     iy = H // 3 - 36
     img.paste(icon, (ix, iy), icon)
 
     # App name text
     draw = ImageDraw.Draw(img)
-    try:
-        font_big = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 14)
-        font_small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 10)
-    except Exception:
-        font_big = font_small = ImageFont.load_default()
+    font_big, font_small = _load_fonts(14, 10)
 
-    name = "pypdf-combiner"
+    name = "Samle"
     bb = draw.textbbox((0, 0), name, font=font_big)
     tw = bb[2] - bb[0]
     draw.text(((W - tw) // 2, H // 3 + 46), name, fill=WHITE, font=font_big)
@@ -192,17 +235,17 @@ def build_installer_side():
     draw.text(((W - tw2) // 2, H // 3 + 64), tagline, fill=GRAY_LIGHT, font=font_small)
 
     # Bottom version
-    ver = "v1.0.0"
+    ver = f"v{_get_version()}"
     bb3 = draw.textbbox((0, 0), ver, font=font_small)
     tw3 = bb3[2] - bb3[0]
     draw.text(((W - tw3) // 2, H - 20), ver, fill=GRAY_LIGHT, font=font_small)
 
     out = ASSETS / "installer_side.bmp"
     img.save(out, format="BMP")
-    print(f"✓ installer_side.bmp  ({W}×{H})")
+    print(f"ok installer_side.bmp  ({W}x{H})")
 
 
-# ── Installer header banner (497 × 55, 24-bit BMP) ────────────────────────
+# ── Installer header banner (497 x 55, 24-bit BMP) ────────────────────────
 
 def build_installer_header():
     W, H = 497, 55
@@ -222,23 +265,23 @@ def build_installer_header():
     draw.rectangle([0, H - 2, W, H], fill=BLUE_MID)
 
     # Mini icon on the right
-    icon = make_icon_image(40).convert("RGBA")
+    logo = ASSETS / "logo.png"
+    if logo.exists():
+        icon = Image.open(logo).convert("RGBA").resize((40, 40), Image.LANCZOS)
+    else:
+        icon = make_icon_image(40).convert("RGBA")
     ix = W - 50
     iy = (H - 40) // 2
     img.paste(icon, (ix, iy), icon)
 
-    try:
-        font_title = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 15)
-        font_sub   = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 11)
-    except Exception:
-        font_title = font_sub = ImageFont.load_default()
+    font_title, font_sub = _load_fonts(15, 11)
 
-    draw.text((14, 10), "pypdf-combiner", fill=BLUE_DARK, font=font_title)
-    draw.text((14, 30), "PDF merging for Windows Explorer", fill=GRAY_TEXT, font=font_sub)
+    draw.text((14, 10), "Samle", fill=BLUE_DARK, font=font_title)
+    draw.text((14, 30), "Samle PDF-filer med ett klikk", fill=GRAY_TEXT, font=font_sub)
 
     out = ASSETS / "installer_header.bmp"
     img.save(out, format="BMP")
-    print(f"✓ installer_header.bmp  ({W}×{H})")
+    print(f"ok installer_header.bmp  ({W}x{H})")
 
 
 if __name__ == "__main__":

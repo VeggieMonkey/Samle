@@ -1,14 +1,14 @@
 ; ============================================================================
-;  pypdf-combiner  –  Inno Setup installer script
+;  Samle  –  Inno Setup installer script
 ;  Per-user install: no administrator rights required.
 ; ============================================================================
 
-#define AppName        "pypdf-combiner"
-#define AppVersion     "1.0.0"
-#define AppPublisher   "pypdf-combiner"
+#define AppName        "Samle"
+#define AppVersion     "1.0.5"
+#define AppPublisher   "VeggieMonkey"
 #define AppURL         "https://github.com/VeggieMonkey/Pypdf-combiner"
-#define AppExeName     "pypdf_combiner.exe"
-#define AppDescription "PDF merging for Windows Explorer"
+#define AppExeName     "samle_pdf.exe"
+#define AppDescription "Samle PDF-filer med ett klikk"
 
 [Setup]
 ; Unique application ID — do NOT change after first release
@@ -27,13 +27,13 @@ PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
 
 ; Install location
-DefaultDirName={localappdata}\{#AppName}
+DefaultDirName={localappdata}\samle-pdf
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 
 ; Output
 OutputDir=..\dist\installer
-OutputBaseFilename=pypdf-combiner-{#AppVersion}-setup
+OutputBaseFilename=samle-pdf-{#AppVersion}-setup
 SetupIconFile=..\assets\icon.ico
 
 ; Wizard images
@@ -78,7 +78,7 @@ Name: "desktopicon"; \
 
 [Files]
 ; Main application bundle (PyInstaller --onedir output)
-Source: "..\dist\pypdf_combiner\*"; \
+Source: "..\dist\samle_pdf\*"; \
   DestDir: "{app}"; \
   Flags: ignoreversion recursesubdirs createallsubdirs
 
@@ -135,4 +135,4 @@ Filename: "{app}\{#AppExeName}"; \
 
 [UninstallDelete]
 ; Clean up the config directory on uninstall (optional — comment out to preserve user config)
-; Type: filesandordirs; Name: "{localappdata}\pypdf-combiner-config"
+; Type: filesandordirs; Name: "{localappdata}\samle-pdf-config"

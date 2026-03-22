@@ -1,0 +1,83 @@
+name: Build & Release Installer
+
+on:
+  push:
+    tags:
+      - "v*"          # Triggers on tags like v1.0.0, v1.2.3
+  workflow_dispatch:   # Allows manual trigger from GitHub UI
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "version=dev-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Generate assets
+        run: python build/generate_assets.py
+        env:
+          APP_VERSION: ${{ steps.version.outputs.version }}
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller build/pypdf_combiner.spec --distpath dist --workpath build/_work
+
+      - name: Install Inno Setup
+        run: |
+          choco install innosetup --no-progress -y
+
+      - name: Build installer
+        run: |
+          iscc installer/pypdf_combiner.iss /DAppVersion=${{ steps.version.outputs.version }}
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pypdf-combiner-installer
+          path: dist/installer/*.exe
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: pypdf-combiner ${{ steps.version.outputs.version }}
+          body: |
+            ## Installation
+
+            1. Download `pypdf-combiner-*-setup.exe` below
+            2. Run the installer (no admin rights required)
+            3. Right-click any PDF files in Explorer and select **Combine PDFs**
+
+            ## Windows SmartScreen warning
+
+            Windows may show a "Windows protected your PC" warning because the installer
+            is not yet code-signed. This is normal for new, self-distributed software.
+
+            To proceed: click **More info** → **Run anyway**
+          files: dist/installer/*.exe
+          draft: false
+          prerelease: false
