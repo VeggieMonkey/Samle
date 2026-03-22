@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
           else
             echo "version=dev-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           fi
@@ -39,7 +39,7 @@ jobs:
       - name: Generate assets
         run: python build/generate_assets.py
         env:
-          APP_VERSION: ${{ steps.version.outputs.version }}
+          PYPDF_COMBINER_VERSION: ${{ steps.version.outputs.version }}
 
       - name: Build with PyInstaller
         run: |

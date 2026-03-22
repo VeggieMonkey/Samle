@@ -4,7 +4,9 @@
 ; ============================================================================
 
 #define AppName        "pypdf-combiner"
-#define AppVersion     "1.0.0"
+#ifndef AppVersion
+  #define AppVersion   "1.0.5"
+#endif
 #define AppPublisher   "pypdf-combiner"
 #define AppURL         "https://github.com/VeggieMonkey/Pypdf-combiner"
 #define AppExeName     "pypdf_combiner.exe"
