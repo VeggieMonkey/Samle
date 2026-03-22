@@ -2,14 +2,14 @@
 
 STRINGS = {
     "no": {
-        "context_menu_combine": "Kombiner PDF-er",
-        "context_menu_settings": "Innstillinger for PDF-kombinering...",
+        "context_menu_combine": "Samle PDF'er",
+        "context_menu_settings": "Samle-innstillinger...",
         "toast_success_title": "PDF kombinert",
         "toast_success_msg": "Lagret som: {filename}",
         "toast_error_title": "Feil ved kombinering",
         "toast_error_msg": "Kunne ikke kombinere PDF-er: {error}",
         "toast_warn_encrypted": "Advarsel: Kryptert fil hoppet over: {filename}",
-        "default_template": "{name} med vedlegg",
+        "default_template": "{name} med vedlegg {date_no}",
         "settings_title": "Innstillinger",
         "settings_language": "Språk",
         "settings_template_label": "Mal for filnavn:",
@@ -17,10 +17,11 @@ STRINGS = {
         "settings_preview_label": "Forhåndsvisning:",
         "settings_notify": "Vis varsling etter sammenslåing",
         "settings_open": "Åpne fil etter sammenslåing",
-        "settings_subtitle": "Innstillinger for PDF-kombinering",
+        "settings_subtitle": "Innstillinger for Samle",
         "settings_behaviour": "Atferd",
         "settings_save": "Lagre",
         "settings_cancel": "Avbryt",
+        "update_available": "Oppdatering tilgjengelig: v{version} — klikk for å laste ned",
     },
     "en": {
         "context_menu_combine": "Combine PDFs",
@@ -42,6 +43,7 @@ STRINGS = {
         "settings_behaviour": "Behaviour",
         "settings_save": "Save",
         "settings_cancel": "Cancel",
+        "update_available": "Update available: v{version} — click to download",
     },
 }
 

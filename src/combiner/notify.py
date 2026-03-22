@@ -13,7 +13,7 @@ def _show(title: str, msg: str) -> None:
         from winotify import Notification
 
         toast = Notification(
-            app_id="pypdf-combiner",
+            app_id="samle-pdf",
             title=title,
             msg=msg,
             duration="short",

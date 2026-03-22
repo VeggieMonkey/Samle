@@ -31,7 +31,7 @@ def _session_dir() -> Path:
 
     bucket = int(time.time() / _BUCKET_SECONDS)
     session_id = f"{explorer_pid}_{bucket}"
-    base = Path(tempfile.gettempdir()) / "pypdf-combiner" / session_id
+    base = Path(tempfile.gettempdir()) / "samle-pdf" / session_id
     base.mkdir(parents=True, exist_ok=True)
     return base
 

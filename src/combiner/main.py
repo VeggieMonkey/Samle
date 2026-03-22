@@ -47,7 +47,7 @@ def _do_merge(file_path: str) -> None:
 
         output_dir = main_doc.parent
         output_path = render_output_name(
-            config.get("output_template", "{name} med vedlegg"),
+            config.get("output_template", get("default_template", lang)),
             main_doc,
             output_dir,
         )

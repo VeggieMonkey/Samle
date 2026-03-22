@@ -11,8 +11,8 @@ from pathlib import Path
 
 
 _SHELL_BASE = r"Software\Classes\SystemFileAssociations\.pdf\shell"
-_COMBINE_KEY = _SHELL_BASE + r"\CombinePDFs"
-_SETTINGS_KEY = _SHELL_BASE + r"\CombinePDFsSettings"
+_COMBINE_KEY = _SHELL_BASE + r"\SamlePDF"
+_SETTINGS_KEY = _SHELL_BASE + r"\SamlePDFSettings"
 _MULTI_INVOKE_KEY = (
     r"Software\Microsoft\Windows\CurrentVersion\Explorer"
 )

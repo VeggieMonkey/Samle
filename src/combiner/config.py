@@ -15,7 +15,7 @@ def _config_dir() -> Path:
         base = os.environ.get("APPDATA", Path.home())
     else:
         base = Path.home() / ".config"
-    return Path(base) / "pypdf-combiner"
+    return Path(base) / "samle-pdf"
 
 
 def _config_path() -> Path:
@@ -24,9 +24,9 @@ def _config_path() -> Path:
 
 def get_default_config() -> dict:
     return {
-        "output_template": "{name} med vedlegg",
+        "output_template": "{name} med vedlegg {date_no}",
         "notify_on_success": True,
-        "open_after_merge": False,
+        "open_after_merge": True,
         "language": "no",
     }
 
