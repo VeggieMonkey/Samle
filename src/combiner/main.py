@@ -1,4 +1,4 @@
-"""Entry point for pypdf-combiner.
+"""Entry point for Samle.
 
 Dispatch table based on sys.argv:
 

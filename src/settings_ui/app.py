@@ -1,4 +1,4 @@
-"""Settings window for pypdf-combiner.
+"""Settings window for Samle.
 
 Built with customtkinter — follows the Windows 11 system light/dark theme
 automatically and uses Fluent-style rounded controls.
@@ -33,8 +33,8 @@ _BLUE_HOVER = "#1E50A2"
 _BLUE_DARK  = "#1E50A2"
 
 
-_RELEASES_URL = "https://github.com/VeggieMonkey/Pypdf-combiner/releases/latest"
-_RELEASES_API = "https://api.github.com/repos/VeggieMonkey/Pypdf-combiner/releases/latest"
+_RELEASES_URL = "https://github.com/VeggieMonkey/Samle/releases/latest"
+_RELEASES_API = "https://api.github.com/repos/VeggieMonkey/Samle/releases/latest"
 
 
 def _is_newer(latest: str, current: str) -> bool:

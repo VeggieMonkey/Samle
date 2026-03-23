@@ -8,7 +8,7 @@
   #define AppVersion   "1.0.5"
 #endif
 #define AppPublisher   "VeggieMonkey"
-#define AppURL         "https://github.com/VeggieMonkey/Pypdf-combiner"
+#define AppURL         "https://github.com/VeggieMonkey/Samle"
 #define AppExeName     "samle_pdf.exe"
 #define AppDescription "Samle PDF-filer med ett klikk"
 

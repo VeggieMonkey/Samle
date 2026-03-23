@@ -1,4 +1,4 @@
-"""Master build script for pypdf-combiner.
+"""Master build script for Samle.
 
 Usage
 -----
@@ -187,7 +187,7 @@ def step_clean() -> None:
 def step_assets(version: str) -> None:
     head("Generate assets")
     env = os.environ.copy()
-    env["PYPDF_COMBINER_VERSION"] = version
+    env["SAMLE_VERSION"] = version
     _run([sys.executable, str(ROOT / "build" / "generate_assets.py")], env=env)
 
 

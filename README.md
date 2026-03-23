@@ -1,4 +1,4 @@
-# pypdf-combiner
+# Samle
 
 Right-click any PDF file(s) in Windows Explorer and choose **"Kombiner PDF-er"** (or "Combine PDFs") to merge them into a single file. Files named `vedlegg N` are automatically sorted numerically after the main document.
 
@@ -72,8 +72,8 @@ src/
   settings_ui/
     app.py          customtkinter settings window
 installer/
-  pypdf_combiner.iss  Inno Setup script
+  samle_pdf.iss       Inno Setup script
 build/
-  pypdf_combiner.spec PyInstaller spec
+  samle_pdf.spec      PyInstaller spec
   build.py            Master build script
 ```
