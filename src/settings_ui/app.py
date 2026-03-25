@@ -295,7 +295,7 @@ class SettingsApp(ctk.CTk):
             self,
             fg_color=("gray92", "gray18"),
             corner_radius=0,
-            height=56,
+            height=68,
         )
         footer.grid(row=2, column=0, sticky="ew")
         footer.grid_propagate(False)
@@ -307,8 +307,9 @@ class SettingsApp(ctk.CTk):
             font=ctk.CTkFont(size=11),
             text_color=("gray55", "gray55"),
             anchor="w",
+            wraplength=260,
         )
-        self._version_label.grid(row=0, column=0, padx=20, pady=16, sticky="w")
+        self._version_label.grid(row=0, column=0, padx=20, pady=8, sticky="w")
 
         btn_frame = ctk.CTkFrame(footer, fg_color="transparent")
         btn_frame.grid(row=0, column=1, padx=16, pady=10)

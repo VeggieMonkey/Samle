@@ -21,11 +21,34 @@ _WAIT_SECONDS = 0.5  # How long the leader waits for peers
 _BUCKET_SECONDS = 2   # Timestamp rounding for session ID
 
 
+def _find_explorer_pid() -> int:
+    """Walk up the process tree to find the Explorer.exe PID.
+
+    When launched via a .bat wrapper the chain is:
+        Explorer → cmd.exe → python.exe
+    so we must go up two levels.  For a compiled .exe it is just:
+        Explorer → samle.exe
+    Walking up to the first explorer.exe handles both cases.
+    """
+    try:
+        import psutil
+        proc = psutil.Process(os.getpid())
+        while True:
+            parent = proc.parent()
+            if parent is None:
+                break
+            if parent.name().lower() == "explorer.exe":
+                return parent.pid
+            proc = parent
+    except Exception:
+        pass
+    return os.getppid()
+
+
 def _session_dir() -> Path:
     """Return the temp directory for the current right-click session."""
     try:
-        import psutil
-        explorer_pid = psutil.Process(os.getpid()).parent().pid
+        explorer_pid = _find_explorer_pid()
     except Exception:
         explorer_pid = os.getppid()
 

@@ -67,11 +67,16 @@ def _do_merge(file_path: str) -> None:
             )
 
         if config.get("open_after_merge", False):
-            import os
             import subprocess
 
             if sys.platform == "win32":
-                os.startfile(str(output_path))  # type: ignore[attr-defined]
+                # os.startfile can fail silently or show a Windows error dialog
+                # when invoked from a non-interactive context menu subprocess.
+                # Using explorer.exe is more reliable in that scenario.
+                try:
+                    subprocess.Popen(["explorer", str(output_path)])
+                except Exception:
+                    pass
             else:
                 subprocess.Popen(["xdg-open", str(output_path)])
 

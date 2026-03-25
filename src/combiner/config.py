@@ -24,7 +24,7 @@ def _config_path() -> Path:
 
 def get_default_config() -> dict:
     return {
-        "output_template": "{name} med vedlegg {date_no}",
+        "output_template": "{name} med vedlegg",
         "notify_on_success": True,
         "open_after_merge": True,
         "language": "no",
