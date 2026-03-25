@@ -22,6 +22,16 @@ def _vedlegg_number(path: Path) -> int | None:
     return int(match.group(1)) if match else None
 
 
+def needs_manual_order(paths: list[Path]) -> bool:
+    """Return True when the user must choose the merge order manually.
+
+    This is the case when more than one file lacks a vedlegg number,
+    making it impossible to determine the correct order automatically.
+    """
+    without_vedlegg = [p for p in paths if _vedlegg_number(p) is None]
+    return len(without_vedlegg) > 1
+
+
 def sort_pdfs(paths: list[Path]) -> tuple[list[Path], Path | None]:
     """Sort *paths* for merging.
 

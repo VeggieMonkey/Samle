@@ -22,6 +22,15 @@ STRINGS = {
         "settings_save": "Lagre",
         "settings_cancel": "Avbryt",
         "update_available": "Oppdatering tilgjengelig: v{version} — klikk for å laste ned",
+        "order_dialog_title": "Velg rekkefølge",
+        "order_dialog_subtitle": "Sorter filene manuelt før sammenslåing",
+        "order_dialog_info": (
+            "Flere av filene mangler vedlegg-nummerering (f.eks. «Vedlegg 1», «Vedlegg 2»), "
+            "så rekkefølgen kan ikke bestemmes automatisk.\n\n"
+            "Dra filene til ønsket rekkefølge, eller bruk pilene. "
+            "Den øverste filen brukes som hoveddokument."
+        ),
+        "order_dialog_merge_btn": "Samle",
     },
     "en": {
         "context_menu_combine": "Combine PDFs",
@@ -44,6 +53,15 @@ STRINGS = {
         "settings_save": "Save",
         "settings_cancel": "Cancel",
         "update_available": "Update available: v{version} — click to download",
+        "order_dialog_title": "Choose order",
+        "order_dialog_subtitle": "Sort files manually before merging",
+        "order_dialog_info": (
+            "Several files lack vedlegg numbering (e.g. \"Vedlegg 1\", \"Vedlegg 2\"), "
+            "so the order cannot be determined automatically.\n\n"
+            "Drag files into the desired order, or use the arrows. "
+            "The top file will be used as the main document."
+        ),
+        "order_dialog_merge_btn": "Merge",
     },
 }
 

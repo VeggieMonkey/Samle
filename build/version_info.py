@@ -2,8 +2,8 @@
 # fmt: off
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(1, 0, 5, 0),
-    prodvers=(1, 0, 5, 0),
+    filevers=(1, 2, 0, 0),
+    prodvers=(1, 2, 0, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -18,12 +18,12 @@ VSVersionInfo(
         [
           StringStruct("CompanyName",      "VeggieMonkey"),
           StringStruct("FileDescription",  "Samle PDF-filer med ett klikk"),
-          StringStruct("FileVersion",      "1.0.5.0"),
+          StringStruct("FileVersion",      "1.2.0.0"),
           StringStruct("InternalName",     "samle_pdf"),
           StringStruct("LegalCopyright",   "MIT License"),
           StringStruct("OriginalFilename", "samle_pdf.exe"),
           StringStruct("ProductName",      "Samle"),
-          StringStruct("ProductVersion",   "1.0.5.0"),
+          StringStruct("ProductVersion",   "1.2.0.0"),
         ]
       ),
     ]),

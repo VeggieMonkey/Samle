@@ -37,13 +37,24 @@ def _do_merge(file_path: str) -> None:
     lang = config.get("language", "no")
 
     try:
-        sorted_paths, main_doc = sort_pdfs(paths)
-        if not sorted_paths or main_doc is None:
-            notify_error(
-                get("toast_error_title", lang),
-                get("toast_error_msg", lang, error="No valid PDF files found"),
-            )
-            return
+        from src.combiner.sorter import needs_manual_order
+
+        if needs_manual_order(paths):
+            from src.combiner.order_dialog import OrderDialog
+
+            ordered = OrderDialog.ask_order(paths, lang)
+            if ordered is None:
+                return  # User cancelled
+            sorted_paths = ordered
+            main_doc = ordered[0]
+        else:
+            sorted_paths, main_doc = sort_pdfs(paths)
+            if not sorted_paths or main_doc is None:
+                notify_error(
+                    get("toast_error_title", lang),
+                    get("toast_error_msg", lang, error="No valid PDF files found"),
+                )
+                return
 
         output_dir = main_doc.parent
         output_path = render_output_name(
