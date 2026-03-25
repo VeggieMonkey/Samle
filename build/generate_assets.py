@@ -245,39 +245,34 @@ def build_installer_side():
     print(f"ok installer_side.bmp  ({W}x{H})")
 
 
-# ── Installer header banner (497 x 55, 24-bit BMP) ────────────────────────
+# ── Installer small image / header icon (55 x 55, 24-bit BMP) ─────────────
+#
+# Inno Setup displays WizardSmallImageFile in the upper-right corner of
+# inner wizard pages — a fixed ~55 px slot.  Only an icon fits here;
+# any text drawn on a wider image would be cropped and unreadable.
 
 def build_installer_header():
-    W, H = 497, 55
+    W, H = 55, 55
     img = Image.new("RGB", (W, H), WHITE)
-    draw = ImageDraw.Draw(img)
 
-    # Right-side blue accent block
-    accent_w = 160
-    for x in range(W - accent_w, W):
-        t = (x - (W - accent_w)) / accent_w
-        r = int(BLUE_LIGHT[0] + (BLUE_MID[0] - BLUE_LIGHT[0]) * t)
-        g = int(BLUE_LIGHT[1] + (BLUE_MID[1] - BLUE_LIGHT[1]) * t)
-        b = int(BLUE_LIGHT[2] + (BLUE_MID[2] - BLUE_LIGHT[2]) * t)
+    # Blue gradient background
+    draw = ImageDraw.Draw(img)
+    for x in range(W):
+        t = x / W
+        r = int(BLUE_DARK[0] + (BLUE_MID[0] - BLUE_DARK[0]) * t)
+        g = int(BLUE_DARK[1] + (BLUE_MID[1] - BLUE_DARK[1]) * t)
+        b = int(BLUE_DARK[2] + (BLUE_MID[2] - BLUE_DARK[2]) * t)
         draw.line([(x, 0), (x, H)], fill=(r, g, b))
 
-    # Thin blue bottom border
-    draw.rectangle([0, H - 2, W, H], fill=BLUE_MID)
-
-    # Mini icon on the right
+    # Centred app icon
     logo = ASSETS / "logo.png"
     if logo.exists():
         icon = Image.open(logo).convert("RGBA").resize((40, 40), Image.LANCZOS)
     else:
         icon = make_icon_image(40).convert("RGBA")
-    ix = W - 50
+    ix = (W - 40) // 2
     iy = (H - 40) // 2
     img.paste(icon, (ix, iy), icon)
-
-    font_title, font_sub = _load_fonts(15, 11)
-
-    draw.text((14, 10), "Samle", fill=BLUE_DARK, font=font_title)
-    draw.text((14, 30), "Samle PDF-filer med ett klikk", fill=GRAY_TEXT, font=font_sub)
 
     out = ASSETS / "installer_header.bmp"
     img.save(out, format="BMP")
